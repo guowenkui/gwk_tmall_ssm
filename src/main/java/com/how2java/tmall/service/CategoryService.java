@@ -11,4 +11,5 @@ public interface CategoryService {
     List<Category> list(Page page);
     void add(Category category);
     void delete(Long id);
+    Category get(Long id);
 }

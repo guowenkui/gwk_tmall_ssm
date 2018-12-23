@@ -34,4 +34,9 @@ public class CategoryServiceImpl implements CategoryService{
     public void delete(Long id) {
         this.categoryMapper.delete(id);
     }
+
+    @Override
+    public Category get(Long id) {
+        return this.categoryMapper.get(id);
+    }
 }

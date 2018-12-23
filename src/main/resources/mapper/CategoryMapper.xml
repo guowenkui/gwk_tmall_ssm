@@ -21,4 +21,8 @@
         DELETE FROM category WHERE id = #{id}
     </delete>
 
+    <select id="get" resultType="Category">
+        SELECT * FROM category WHERE id=#{id}
+    </select>
+
 </mapper>
