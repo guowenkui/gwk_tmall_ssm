@@ -29,4 +29,9 @@ public class CategoryServiceImpl implements CategoryService{
     public void add(Category category) {
         this.categoryMapper.add(category);
     }
+
+    @Override
+    public void delete(Long id) {
+        this.categoryMapper.delete(id);
+    }
 }
