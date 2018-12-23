@@ -24,4 +24,9 @@ public class CategoryServiceImpl implements CategoryService{
         public List<Category> list(Page page) {
             return this.categoryMapper.list(page);
     }
+
+    @Override
+    public void add(Category category) {
+        this.categoryMapper.add(category);
+    }
 }
