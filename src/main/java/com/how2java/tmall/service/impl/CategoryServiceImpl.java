@@ -39,4 +39,9 @@ public class CategoryServiceImpl implements CategoryService{
     public Category get(Long id) {
         return this.categoryMapper.get(id);
     }
+
+    @Override
+    public void update(Category category) {
+        this.categoryMapper.update(category);
+    }
 }
