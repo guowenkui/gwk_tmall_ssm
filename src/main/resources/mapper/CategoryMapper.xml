@@ -4,19 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.how2java.tmall.mapper.CategoryMapper">
+
     <select id="list" resultType="Category">
         select * from   category order by id desc
-        <if test="start!=null and count!=null">
-            limit #{start},#{count}
-        </if>
     </select>
-    <select id="total" resultType="int">
-        SELECT COUNT(*) FROM  category
-    </select>
+
 
     <insert id="add" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO  category (name) VALUES (#{name})
     </insert>
+
     <delete id="delete">
         DELETE FROM category WHERE id = #{id}
     </delete>
