@@ -20,12 +20,12 @@ public class MybatisGenerator {
         Date now =sdf.parse(today);
         Date d = new Date();
 
-//        if(d.getTime()>now.getTime()+1000*60*60*24){
-//            System.err.println("——————未成成功运行——————");
-//            System.err.println("——————未成成功运行——————");
-//            System.err.println("本程序具有破坏作用，应该只运行一次，如果必须要再运行，需要修改today变量为今天，如:" + sdf.format(new Date()));
-//            return;
-//        }
+        if(d.getTime()>now.getTime()+1000*60*60*24){
+            System.err.println("——————未成成功运行——————");
+            System.err.println("——————未成成功运行——————");
+            System.err.println("本程序具有破坏作用，应该只运行一次，如果必须要再运行，需要修改today变量为今天，如:" + sdf.format(new Date()));
+            return;
+        }
 
         if(false)
             return;
