@@ -3,16 +3,14 @@ package com.how2java.tmall.service.impl;
 import com.how2java.tmall.mapper.CategoryMapper;
 import com.how2java.tmall.pojo.Category;
 import com.how2java.tmall.pojo.CategoryExample;
-import com.how2java.tmall.service.CategoryService;
-import com.how2java.tmall.util.Page;
+import com.how2java.tmall.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
 import java.util.List;
 
 @Service
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements ICategoryService {
 
     @Autowired
     private CategoryMapper categoryMapper;
@@ -30,12 +28,12 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(int id) {
         this.categoryMapper.deleteByPrimaryKey(id);
     }
 
     @Override
-    public Category get(Long id) {
+    public Category get(int id) {
         return this.categoryMapper.selectByPrimaryKey(id);
     }
 

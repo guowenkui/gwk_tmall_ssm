@@ -5,7 +5,7 @@ import com.how2java.tmall.pojo.CategoryExample;
 import java.util.List;
 
 public interface CategoryMapper {
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(Category record);
 
@@ -13,7 +13,7 @@ public interface CategoryMapper {
 
     List<Category> selectByExample(CategoryExample example);
 
-    Category selectByPrimaryKey(Long id);
+    Category selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(Category record);
 

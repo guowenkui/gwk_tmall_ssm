@@ -3,7 +3,7 @@ package com.how2java.tmall.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.how2java.tmall.pojo.Category;
-import com.how2java.tmall.service.CategoryService;
+import com.how2java.tmall.service.ICategoryService;
 import com.how2java.tmall.util.ImageUtil;
 import com.how2java.tmall.util.Page;
 import com.how2java.tmall.util.UploadedImageFile;
@@ -25,8 +25,14 @@ import java.util.List;
 public class CategoryController {
 
     @Autowired
-    private CategoryService categoryService;
+    private ICategoryService categoryService;
 
+    /**
+     * 导向到天猫后台--分类管理界面
+     * @param model
+     * @param page
+     * @return
+     */
     @RequestMapping("admin_category_list")
     public  String list(Model model, Page page){
         PageHelper.offsetPage(page.getStart(),page.getCount());
@@ -54,7 +60,7 @@ public class CategoryController {
 
 
     @RequestMapping("admin_category_delete")
-    public String delete(Long id,HttpSession session){
+    public String delete(int id,HttpSession session){
         this.categoryService.delete(id);
         File imageFolder = new File(session.getServletContext().getRealPath("img/category"));
         File file = new File(imageFolder,id+".jpg");
@@ -62,8 +68,14 @@ public class CategoryController {
         return "redirect:/admin_category_list";
     }
 
+    /**
+     * 导向到一个分类的编辑界面
+     * @param model
+     * @param id
+     * @return
+     */
     @RequestMapping("admin_category_edit")
-    public String edit(Model model,Long id){
+    public String edit(Model model,int id){
         Category c = this.categoryService.get(id);
         model.addAttribute("c",c);
         return "include/admin/editCategory";
