@@ -4,7 +4,9 @@ import com.how2java.tmall.mapper.ProductMapper;
 import com.how2java.tmall.pojo.Category;
 import com.how2java.tmall.pojo.Product;
 import com.how2java.tmall.pojo.ProductExample;
+import com.how2java.tmall.pojo.ProductImage;
 import com.how2java.tmall.service.ICategoryService;
+import com.how2java.tmall.service.IProductImageService;
 import com.how2java.tmall.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     private ICategoryService categoryService;
 
+    @Autowired
+    private IProductImageService productImageService;
+
 
 
     @Override
@@ -30,6 +35,7 @@ public class ProductServiceImpl implements IProductService {
         example.createCriteria().andCidEqualTo(cid);
         List<Product> list = this.productMapper.selectByExample(example);
         setCategory(list);
+        setFirstProductImage(list);
         return list;
     }
 
@@ -37,6 +43,7 @@ public class ProductServiceImpl implements IProductService {
     public Product get(int id) {
         Product product = this.productMapper.selectByPrimaryKey(id);
         setCategory(product);
+        setFirstProductImage(product);
         return product;
     }
 
@@ -68,5 +75,21 @@ public class ProductServiceImpl implements IProductService {
         Category c = this.categoryService.get(cid);
         p.setCategory(c);
     }
+
+    public void setFirstProductImage(List<Product> list){
+        for (Product product:list){
+            setFirstProductImage(product);
+        }
+    }
+
+
+    public void setFirstProductImage(Product p){
+        List<ProductImage> list = this.productImageService.list(p.getId(),IProductImageService.type_single);
+        if (!list.isEmpty()){
+            ProductImage productImage = list.get(0);
+            p.setFirstProductImage(productImage);
+        }
+    }
+
 
 }
