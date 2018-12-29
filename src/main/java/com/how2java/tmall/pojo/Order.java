@@ -1,6 +1,9 @@
 package com.how2java.tmall.pojo;
 
+import com.how2java.tmall.service.IOrderService;
+
 import java.util.Date;
+import java.util.List;
 
 public class Order {
     private Integer id;
@@ -29,6 +32,16 @@ public class Order {
 
     private String status;
 
+    /*如下是非数据库字段*/
+    private List<OrderItem> orderItems;//该订单下的订单项列表
+    private User user;//该订单对应的用户
+    private float total;//该订单的总计金额
+    private int totalNumber;//该订单的总计数量
+
+
+
+
+    /*setter,getter*/
     public Integer getId() {
         return id;
     }
@@ -131,5 +144,64 @@ public class Order {
 
     public void setStatus(String status) {
         this.status = status == null ? null : status.trim();
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public float getTotal() {
+        return total;
+    }
+
+    public void setTotal(float total) {
+        this.total = total;
+    }
+
+    public int getTotalNumber() {
+        return totalNumber;
+    }
+
+    public void setTotalNumber(int totalNumber) {
+        this.totalNumber = totalNumber;
+    }
+
+    public String getStatusDesc(){
+        String desc = "未知";
+        switch (this.status){
+            case IOrderService.waitPay:
+                desc="待付款";
+                break;
+            case IOrderService.waitDelivery:
+                desc="待发货";
+                break;
+            case IOrderService.waitConfirm:
+                desc="待收货";
+                break;
+            case IOrderService.waitReview:
+                desc="等评价";
+                break;
+            case IOrderService.finish:
+                desc="完成";
+                break;
+            case IOrderService.delete:
+                desc="删除";
+                break;
+            default:
+                desc="未知";
+        }
+        return desc;
     }
 }
