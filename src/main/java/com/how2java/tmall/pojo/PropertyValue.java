@@ -1,5 +1,7 @@
 package com.how2java.tmall.pojo;
 
+import java.security.Provider;
+
 public class PropertyValue {
     private Integer id;
 
@@ -8,6 +10,21 @@ public class PropertyValue {
     private Integer ptid;
 
     private String value;
+
+    /*非数据库字段*/
+    private Property property;
+
+
+
+    /*setter,getter*/
+
+    public Property getProperty() {
+        return property;
+    }
+
+    public void setProperty(Property property) {
+        this.property = property;
+    }
 
     public Integer getId() {
         return id;
