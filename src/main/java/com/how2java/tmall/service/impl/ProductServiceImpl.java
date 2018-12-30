@@ -11,6 +11,7 @@ import com.how2java.tmall.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -62,6 +63,35 @@ public class ProductServiceImpl implements IProductService {
         this.productMapper.updateByPrimaryKeySelective(product);
     }
 
+    @Override
+    public void fill(List<Category> cs) {
+        for (Category category:cs){
+            fill(category);
+        }
+    }
+
+    @Override
+    public void fill(Category c) {
+        List<Product> ps = this.list(c.getId());
+        c.setProducts(ps);
+    }
+
+    @Override
+    public void fillByRow(List<Category> cs) {
+        int productNumberEachRow = 8;
+        for (Category category:cs){
+            List<Product> products = category.getProducts();
+            List<List<Product>> productsByRow = new ArrayList<>();
+
+            for (int i=0;i<products.size();i+=productNumberEachRow){
+                int size = i+productNumberEachRow;
+                size = size>products.size()?products.size():size;
+                List<Product> productsOfEachRow = products.subList(i,size);
+                productsByRow.add(productsOfEachRow);
+            }
+            category.setProductsByRow(productsByRow);
+        }
+    }
 
 
     public void setCategory(List<Product> list){
