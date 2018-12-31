@@ -5,9 +5,7 @@ import com.how2java.tmall.pojo.Category;
 import com.how2java.tmall.pojo.Product;
 import com.how2java.tmall.pojo.ProductExample;
 import com.how2java.tmall.pojo.ProductImage;
-import com.how2java.tmall.service.ICategoryService;
-import com.how2java.tmall.service.IProductImageService;
-import com.how2java.tmall.service.IProductService;
+import com.how2java.tmall.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +24,12 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     private IProductImageService productImageService;
 
+    @Autowired
+    private IOrderItemService orderItemService;
+
+    @Autowired
+    private IReviewService reviewService;
+
 
 
     @Override
@@ -37,6 +41,8 @@ public class ProductServiceImpl implements IProductService {
         List<Product> list = this.productMapper.selectByExample(example);
         setCategory(list);
         setFirstProductImage(list);
+        setProductSingleImages(list);
+        setProductDetailImages(list);
         return list;
     }
 
@@ -45,6 +51,8 @@ public class ProductServiceImpl implements IProductService {
         Product product = this.productMapper.selectByPrimaryKey(id);
         setCategory(product);
         setFirstProductImage(product);
+        setProductSingleImages(product);
+        setProductDetailImages(product);
         return product;
     }
 
@@ -93,6 +101,22 @@ public class ProductServiceImpl implements IProductService {
         }
     }
 
+    @Override
+    public void setSaleAndReviewNumber(Product product) {
+        int saleCount = this.orderItemService.getSaleCount(product.getId());
+        product.setSaleCount(saleCount);
+
+        int reviewCount = this.reviewService.getReviewCount(product.getCid());
+        product.setReviewCount(reviewCount);
+    }
+
+    @Override
+    public void setSaleAndReviewNumber(List<Product> list) {
+        for (Product product:list){
+            setSaleAndReviewNumber(product);
+        }
+    }
+
 
     public void setCategory(List<Product> list){
         for(Product p:list){
@@ -118,6 +142,32 @@ public class ProductServiceImpl implements IProductService {
         if (!list.isEmpty()){
             ProductImage productImage = list.get(0);
             p.setFirstProductImage(productImage);
+        }
+    }
+
+    public void setProductSingleImages(List<Product> list){
+        for (Product product:list){
+            setProductSingleImages(product);
+        }
+    }
+
+    public void setProductSingleImages(Product p){
+        List<ProductImage> list = this.productImageService.list(p.getId(),IProductImageService.type_single);
+        if (!list.isEmpty()){
+            p.setProductSingleImages(list);
+        }
+    }
+
+
+    public void setProductDetailImages(List<Product> products){
+        for (Product product:products){
+            setProductDetailImages(product);
+        }
+    }
+    public void setProductDetailImages(Product product){
+        List<ProductImage> list = this.productImageService.list(product.getId(),IProductImageService.type_detail);
+        if (!list.isEmpty()){
+            product.setProductDetailImages(list);
         }
     }
 

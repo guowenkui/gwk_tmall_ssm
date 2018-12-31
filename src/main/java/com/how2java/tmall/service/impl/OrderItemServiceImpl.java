@@ -81,10 +81,6 @@ public class OrderItemServiceImpl implements IOrderItemService {
 
     }
 
-
-
-
-
     public void setProduct(List<OrderItem> ois){
         for (OrderItem orderItem:ois){
             setProduct(orderItem);
@@ -95,5 +91,19 @@ public class OrderItemServiceImpl implements IOrderItemService {
         Product product = this.productService.get(orderItem.getPid());
         orderItem.setProduct(product);
     }
+
+
+    @Override
+    public int getSaleCount(Integer productId) {
+        OrderItemExample example = new OrderItemExample();
+        example.createCriteria().andPidEqualTo(productId);
+        List<OrderItem> list = this.orderItemMapper.selectByExample(example);
+        int number=0;
+        for (OrderItem item : list){
+            number+=item.getNumber();
+        }
+        return number;
+    }
+
 
 }

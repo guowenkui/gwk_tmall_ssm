@@ -17,4 +17,7 @@ public interface IOrderItemService {
 
     void fill(List<Order> os);
     void fill(Order order);
+
+    int getSaleCount(Integer productId);
+
 }
