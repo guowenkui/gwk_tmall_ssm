@@ -14,4 +14,5 @@ public interface IUserService {
     void update(User user);
 
     boolean isExist(String name);
+    User get(String username,String password);
 }

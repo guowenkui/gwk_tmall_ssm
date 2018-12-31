@@ -20,4 +20,9 @@ public class PageController {
         return "fore/registerSuccess";
     }
 
+    @RequestMapping("loginPage")
+    public String loginPage(){
+        return "fore/login";
+    }
+
 }
