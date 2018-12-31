@@ -43,4 +43,15 @@ public class UserServiceImpl implements IUserService {
     public void update(User user) {
         this.userMapper.updateByPrimaryKeySelective(user);
     }
+
+    @Override
+    public boolean isExist(String name) {
+        UserExample example = new UserExample();
+        example.createCriteria().andNameEqualTo(name);
+        List<User> list = this.userMapper.selectByExample(example);
+        if (!list.isEmpty()){
+            return true;
+        }
+        return false;
+    }
 }
