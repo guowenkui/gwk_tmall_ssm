@@ -6,6 +6,7 @@ import com.how2java.tmall.pojo.User;
 import com.how2java.tmall.service.ICategoryService;
 import com.how2java.tmall.service.IProductService;
 import com.how2java.tmall.service.IUserService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,6 +70,13 @@ public class ForeController {
             return "fore/login";
         }
         session.setAttribute("user",user);
+        return "redirect:forehome";
+    }
+
+    @RequestMapping("forelogout")
+    public String logout(HttpSession session){
+
+        session.removeAttribute("user");
         return "redirect:forehome";
     }
 }
