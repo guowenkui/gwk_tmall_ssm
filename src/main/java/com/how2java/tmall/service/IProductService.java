@@ -20,4 +20,6 @@ public interface IProductService {
 
     void setSaleAndReviewNumber(Product product);
     void setSaleAndReviewNumber(List<Product> list);
+
+    List<Product> search(String keyword);
 }
