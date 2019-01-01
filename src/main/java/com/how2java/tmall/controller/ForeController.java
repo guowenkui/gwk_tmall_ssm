@@ -4,6 +4,7 @@ package com.how2java.tmall.controller;
 import com.how2java.tmall.pojo.*;
 import com.how2java.tmall.service.*;
 import com.sun.org.apache.xpath.internal.operations.Mod;
+import comparator.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -122,5 +124,33 @@ public class ForeController {
         }else {
             return "fail";
         }
+    }
+
+    @RequestMapping("forecategory")
+    public String foreCategory(Model model,String sort,int cid){
+        Category category = this.categoryService.get(cid);
+        this.productService.fill(category);
+        this.productService.setSaleAndReviewNumber(category.getProducts());
+        if (sort!=null){
+            switch (sort){
+                case "all":
+                    Collections.sort(category.getProducts(),new ProductAllComparator());
+                    break;
+                case "date":
+                    Collections.sort(category.getProducts(),new ProductDateComparator());
+                    break;
+                case "review":
+                    Collections.sort(category.getProducts(),new ProductReviewComparator());
+                    break;
+                case "price":
+                    Collections.sort(category.getProducts(),new ProductPriceComparator());
+                    break;
+                case "saleCount":
+                    Collections.sort(category.getProducts(),new ProductSaleCountComparator());
+                    break;
+            }
+        }
+        model.addAttribute("c",category);
+        return "fore/category";
     }
 }
