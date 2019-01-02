@@ -36,6 +36,9 @@ public class ForeController {
     @Autowired
     private IPropertyValueService propertyValueService;
 
+    @Autowired
+    private IOrderItemService orderItemService;
+
 
 
 
@@ -163,4 +166,35 @@ public class ForeController {
         model.addAttribute("ps",list);
         return "fore/searchResult";
     }
+
+
+    @RequestMapping("forebuyone")
+    public String buyone(int pid,int num,HttpSession session){
+        Product product = this.productService.get(pid);
+        int oiid = 0;
+
+        User user = (User) session.getAttribute("user");
+        boolean found = false;
+        List<OrderItem> list = this.orderItemService.listByUser(user.getId());
+        for (OrderItem item:list){
+            if (item.getProduct().getId().intValue() ==product.getId().intValue()){
+                item.setNumber(item.getNumber()+num);
+                this.orderItemService.update(item);
+                found  =true;
+                oiid = item.getId();
+                break;
+            }
+        }
+
+        if (!found){
+            OrderItem item = new OrderItem();
+            item.setUid(user.getId());
+            item.setNumber(num);
+            item.setPid(pid);
+            this.orderItemService.add(item);
+            oiid = item.getId();
+        }
+        return "redirect:forebuy?oiid="+oiid;
+    }
+
 }

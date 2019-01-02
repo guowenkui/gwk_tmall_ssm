@@ -20,4 +20,7 @@ public interface IOrderItemService {
 
     int getSaleCount(Integer productId);
 
+
+    List<OrderItem> listByUser(int userId);
+
 }
