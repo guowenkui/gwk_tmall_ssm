@@ -29,12 +29,16 @@ public class OrderItemServiceImpl implements IOrderItemService {
     public List<OrderItem> list() {
         OrderItemExample example = new OrderItemExample();
         example.setOrderByClause("id desc");
-        return this.orderItemMapper.selectByExample(example);
+        List<OrderItem> list = this.orderItemMapper.selectByExample(example);
+        setProduct(list);
+        return list;
     }
 
     @Override
     public OrderItem get(int id) {
-        return this.orderItemMapper.selectByPrimaryKey(id);
+        OrderItem orderItem = this.orderItemMapper.selectByPrimaryKey(id);
+        setProduct(orderItem);
+        return orderItem;
     }
 
     @Override

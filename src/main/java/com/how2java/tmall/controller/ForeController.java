@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -195,6 +196,22 @@ public class ForeController {
             oiid = item.getId();
         }
         return "redirect:forebuy?oiid="+oiid;
+    }
+
+    @RequestMapping("forebuy")
+    public String buy(Model model,String[] oiid,HttpSession session){
+
+        List<OrderItem> ois = new ArrayList<>();
+        float total = 0;
+        for (String strid:oiid){
+            int id = Integer.parseInt(strid);
+            OrderItem orderItem = this.orderItemService.get(id);
+            total +=orderItem.getProduct().getPromotePrice()*orderItem.getNumber();
+            ois.add(orderItem);
+        }
+        session.setAttribute("ois",ois);
+        model.addAttribute("total",total);
+        return "fore/buy";
     }
 
 }
