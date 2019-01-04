@@ -337,4 +337,41 @@ public class ForeController {
         return "fore/bought";
     }
 
+    /**
+     *确认收货
+     */
+    @RequestMapping("foreconfirmPay")
+    public String confirmPay(Model model,int oid) {
+
+        Order order = this.orderService.get(oid);
+        this.orderItemService.fill(order);
+        model.addAttribute("o",order);
+        return "fore/confirmPay";
+    }
+
+
+    /**
+     * 确认支付
+     */
+    @RequestMapping("foreorderConfirmed")
+    public String orderConfirmed(int oid){
+        Order order = this.orderService.get(oid);
+        order.setStatus(IOrderService.waitReview);
+        order.setConfirmDate(new Date());
+        this.orderService.update(order);
+        return "fore/orderConfirmed";
+    }
+
+    /**
+     * 我的订单页操作--删除
+     */
+    @RequestMapping("foredeleteOrder")
+    @ResponseBody
+    public String deletOrder(int oid){
+        Order order = this.orderService.get(oid);
+        order.setStatus(IOrderService.delete);
+        this.orderService.update(order);
+        return "success";
+    }
+
 }
