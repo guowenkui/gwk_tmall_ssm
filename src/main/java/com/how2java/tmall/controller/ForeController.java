@@ -311,7 +311,7 @@ public class ForeController {
 
 
     /**
-     *
+     *确认支付
      */
     @RequestMapping("forepayed")
     public String payed(Model model,int oid,float total){
@@ -319,9 +319,22 @@ public class ForeController {
         order.setPayDate(new Date());
         order.setStatus(IOrderService.waitDelivery);
         this.orderService.update(order);
-        
+
         model.addAttribute("o",order);
         return "fore/payed";
+    }
+
+
+    /**
+     * 导向到我的订单页面
+     */
+    @RequestMapping("forebought")
+    public String bought(Model model,HttpSession session){
+        User user = (User) session.getAttribute("user");
+        List<Order> list = this.orderService.listByOrder(user.getId(),IOrderService.delete);
+        this.orderItemService.fill(list);
+        model.addAttribute("os",list);
+        return "fore/bought";
     }
 
 }

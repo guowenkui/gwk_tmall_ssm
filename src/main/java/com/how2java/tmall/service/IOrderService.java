@@ -24,4 +24,6 @@ public interface IOrderService {
     void update(Order order);
 
     float add(Order order, List<OrderItem> orderItemList);
+
+    List<Order> listByOrder(int uid ,String excludedStatus);
 }
