@@ -106,7 +106,7 @@ public class ProductServiceImpl implements IProductService {
         int saleCount = this.orderItemService.getSaleCount(product.getId());
         product.setSaleCount(saleCount);
 
-        int reviewCount = this.reviewService.getReviewCount(product.getCid());
+        int reviewCount = this.reviewService.getReviewCount(product.getId());
         product.setReviewCount(reviewCount);
     }
 

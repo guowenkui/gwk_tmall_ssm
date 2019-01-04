@@ -4,7 +4,6 @@ package com.how2java.tmall.controller;
 import com.github.pagehelper.PageHelper;
 import com.how2java.tmall.pojo.*;
 import com.how2java.tmall.service.*;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import comparator.*;
 import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +41,8 @@ public class ForeController {
 
     @Autowired
     private IOrderService orderService;
+
+
 
 
 
@@ -373,5 +374,48 @@ public class ForeController {
         this.orderService.update(order);
         return "success";
     }
+
+
+    /**
+     *我的订单页操作--评价
+     */
+    @RequestMapping("forereview")
+    public String review(Model model,int oid){
+        Order order = this.orderService.get(oid);
+        this.orderItemService.fill(order);
+        Product firstProduct = order.getOrderItems().get(0).getProduct();
+        List<Review> reviews = this.reviewService.list(firstProduct.getId());
+        this.productService.setSaleAndReviewNumber(firstProduct);
+        model.addAttribute("o",order);
+        model.addAttribute("p",firstProduct);
+        model.addAttribute("reviews",reviews);
+        return "fore/review";
+    }
+
+
+    /**
+     *提交评价
+     */
+    @RequestMapping("foredoreview")
+    public String doReview(Model model,String content,@RequestParam("pid") int pid,@RequestParam("oid") int oid,HttpSession session){
+
+        User user = (User) session.getAttribute("user");
+
+        Order order = this.orderService.get(oid);
+        order.setStatus(IOrderService.finish);
+        this.orderService.update(order);
+
+        content = HtmlUtils.htmlEscape(content);
+
+        Review review = new Review();
+        review.setContent(content);
+        review.setPid(pid);
+        review.setCreateDate(new Date());
+        review.setUid(user.getId());
+        this.reviewService.add(review);
+        return "redirect:forereview?oid="+oid+"&showonly=true";
+    }
+
+
 
 }
