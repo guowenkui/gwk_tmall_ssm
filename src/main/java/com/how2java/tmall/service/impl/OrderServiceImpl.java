@@ -3,11 +3,15 @@ package com.how2java.tmall.service.impl;
 import com.how2java.tmall.mapper.OrderMapper;
 import com.how2java.tmall.pojo.Order;
 import com.how2java.tmall.pojo.OrderExample;
+import com.how2java.tmall.pojo.OrderItem;
 import com.how2java.tmall.pojo.User;
+import com.how2java.tmall.service.IOrderItemService;
 import com.how2java.tmall.service.IOrderService;
 import com.how2java.tmall.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -21,6 +25,9 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IOrderItemService orderItemService;
 
 
 
@@ -53,6 +60,22 @@ public class OrderServiceImpl implements IOrderService {
         this.orderMapper.updateByPrimaryKeySelective(order);
     }
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED,rollbackForClassName = "Exception")
+    public float add(Order order, List<OrderItem> orderItemList) {
+        add(order);
+
+        float total = 0;
+        if (false){
+            throw new RuntimeException();
+        }
+        for (OrderItem orderItem:orderItemList){
+            orderItem.setOid(order.getId());
+            this.orderItemService.update(orderItem);
+            total+=orderItem.getProduct().getPromotePrice()*orderItem.getNumber();
+        }
+        return total;
+    }
 
 
     public void setUser(List<Order> list){

@@ -6,6 +6,7 @@ import com.how2java.tmall.pojo.*;
 import com.how2java.tmall.service.*;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import comparator.*;
+import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class ForeController {
@@ -39,6 +39,10 @@ public class ForeController {
 
     @Autowired
     private IOrderItemService orderItemService;
+
+    @Autowired
+    private IOrderService orderService;
+
 
 
 
@@ -251,7 +255,7 @@ public class ForeController {
     }
 
     /**
-     * 购物车删除
+     * 购物车操作--删除
      */
     @RequestMapping("foredeleteOrderItem")
     @ResponseBody
@@ -264,6 +268,10 @@ public class ForeController {
         return "success";
     }
 
+
+    /**
+     * 购物车操作--改变订单数量
+     */
     @RequestMapping("forechangeOrderItem")
     @ResponseBody
     public String changeOrderItem(int pid,int number,HttpSession session){
@@ -280,6 +288,40 @@ public class ForeController {
             }
         }
         return "success";
+    }
+
+
+    /**
+     *提交订单
+     */
+    @RequestMapping("forecreateOrder")
+    public String createOrder(Order order,HttpSession session){
+        User user = (User) session.getAttribute("user");
+        String orderCode = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date())+ RandomUtils.nextInt(10000);
+
+        order.setOrderCode(orderCode);
+        order.setCreateDate(new Date());
+        order.setStatus(IOrderService.waitPay);
+        order.setUid(user.getId());
+
+        List<OrderItem> orderItemList = (List<OrderItem>) session.getAttribute("ois");
+        float total = this.orderService.add(order,orderItemList);
+        return "redirect:forealipay?oid="+order.getId()+"&total="+total;
+    }
+
+
+    /**
+     *
+     */
+    @RequestMapping("forepayed")
+    public String payed(Model model,int oid,float total){
+        Order order = this.orderService.get(oid);
+        order.setPayDate(new Date());
+        order.setStatus(IOrderService.waitDelivery);
+        this.orderService.update(order);
+        
+        model.addAttribute("o",order);
+        return "fore/payed";
     }
 
 }
