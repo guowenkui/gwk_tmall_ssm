@@ -250,5 +250,36 @@ public class ForeController {
         return "fore/cart";
     }
 
+    /**
+     * 购物车删除
+     */
+    @RequestMapping("foredeleteOrderItem")
+    @ResponseBody
+    public String deleteOrderItem(int oiid,HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if (user!=null){
+            return "fail";
+        }
+        this.orderItemService.delete(oiid);
+        return "success";
+    }
+
+    @RequestMapping("forechangeOrderItem")
+    @ResponseBody
+    public String changeOrderItem(int pid,int number,HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if (user==null){
+            return "fail";
+        }
+        List<OrderItem> list = this.orderItemService.listByUser(user.getId());
+        for (OrderItem item:list){
+            if (item.getProduct().getId().intValue()==pid){
+                item.setNumber(number);
+                this.orderItemService.update(item);
+                break;
+            }
+        }
+        return "success";
+    }
 
 }
